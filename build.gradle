@@ -1,4 +1,4 @@
-group 'com.spacebison'
+group 'com.spacebison.adventofcode2017'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
