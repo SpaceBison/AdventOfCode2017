@@ -11,8 +11,8 @@ public class Day2 {
     static int part1(String input) {
         return Arrays.stream(input.split("\n"))
                 .map(line -> Arrays.stream(line.split("[\t ]"))
-                        .mapToInt(Integer::parseInt))
-                .map(IntStream::summaryStatistics)
+                        .mapToInt(Integer::parseInt)
+                        .summaryStatistics())
                 .mapToInt(ss -> ss.getMax() - ss.getMin())
                 .sum();
     }
@@ -22,13 +22,12 @@ public class Day2 {
                 .map(line -> Arrays.stream(line.split("[\t ]"))
                         .mapToInt(Integer::parseInt)
                         .toArray())
-                .mapToInt(arr -> IntStream.range(0, arr.length)
+                .flatMapToInt(arr -> IntStream.range(0, arr.length)
                         .flatMap(i -> IntStream.range(0, arr.length)
                                 .filter(j -> j != i)
                                 .mapToDouble(j -> (double) arr[i] / arr[j])
                                 .filter(d -> d == Math.floor(d))
-                                .mapToInt(d -> (int) d))
-                        .sum())
+                                .mapToInt(d -> (int) d)))
                 .sum();
     }
 }
