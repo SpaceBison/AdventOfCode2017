@@ -9,10 +9,34 @@ public class Day9 {
     }
 
     static int part1(String input) {
-        Queue<Character> chars = input.chars().mapToObj(i -> (char) i).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+        Queue<Character> chars = asCharQueue(input);
         return parseGroup(chars, 1);
     }
 
+    static int part2(String input) {
+        Queue<Character> chars = asCharQueue(input);
+
+        int garbage = 0;
+        while (!chars.isEmpty()) {
+            switch (chars.peek()) {
+                case '<':
+                    garbage += parseGarbage(chars);
+                    break;
+
+                default:
+                    chars.poll();
+            }
+        }
+        return garbage;
+    }
+
+    private static Queue<Character> asCharQueue(String input) {
+        return input.chars().mapToObj(i -> (char) i).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+    }
+
+    /**
+     * @return Score
+     */
     private static int parseGroup(Queue<Character> chars, int depth) {
         //System.out.println("looking at group: " + chars);
         int score = depth;
@@ -40,11 +64,15 @@ public class Day9 {
         }
     }
 
-    private static void parseGarbage(Queue<Character> chars) {
+    /**
+     * @return Number of non-canceled garbage chars
+     */
+    private static int parseGarbage(Queue<Character> chars) {
         //System.out.println("looking at garbage: " + chars);
         Character openingBracket = chars.poll();
         if (openingBracket != '<') throw new IllegalStateException();
 
+        int count = 0;
         while (true) {
             switch (chars.poll()) {
                 case '!':
@@ -52,12 +80,11 @@ public class Day9 {
                     break;
 
                 case '>':
-                    return;
+                    return count;
+
+                default:
+                    ++count;
             }
         }
-    }
-
-    static int part2(String input) {
-        return 0;
     }
 }

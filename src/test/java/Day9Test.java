@@ -18,6 +18,13 @@ public class Day9Test {
 
     @Test
     public void part2() throws Exception {
+        assertThat(Day9.part2("<>"), is(0));
+        assertThat(Day9.part2("<random characters>"), is(17));
+        assertThat(Day9.part2("<<<<>"), is(3));
+        assertThat(Day9.part2("<{!>}>"), is(2));
+        assertThat(Day9.part2("<!!>"), is(0));
+        assertThat(Day9.part2("<!!!>>"), is(0));
+        assertThat(Day9.part2("<{o\"i!a,<{i<a>"), is(10));
     }
 
 }
