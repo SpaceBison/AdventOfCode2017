@@ -11,10 +11,10 @@ public class Day10Test {
     public void reverseRange() throws Exception {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 
-        Day10.reverseRange(list, 0, 3);
+        Day10.wrappedReverseRange(list, 0, 3);
         assertThat(list, is(Arrays.asList(3, 2, 1, 4, 5)));
 
-        Day10.reverseRange(list, 3, 7);
+        Day10.wrappedReverseRange(list, 3, 7);
         assertThat(list, is(Arrays.asList(5, 4, 1, 2, 3)));
     }
 
@@ -24,7 +24,7 @@ public class Day10Test {
         int current = 0;
         int skip = 0;
         for (Integer length : Arrays.asList(3, 4, 1, 5)) {
-            Day10.reverseRange(list, current, current + length);
+            Day10.wrappedReverseRange(list, current, current + length);
             current += length + skip++;
         }
         assertThat(list, is(Arrays.asList(3, 4, 2, 1, 0)));
