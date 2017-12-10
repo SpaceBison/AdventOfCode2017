@@ -4,7 +4,7 @@ import org.junit.Test;
 
 public class Day7Test {
 
-    public static final String INPUT = "pbga (66)\n" +
+    private static final String INPUT = "pbga (66)\n" +
             "xhth (57)\n" +
             "ebii (61)\n" +
             "havc (66)\n" +
