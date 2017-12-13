@@ -1,6 +1,7 @@
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class Day12Test {
     private static final String INPUT = "0 <-> 2\n"+
@@ -13,11 +14,11 @@ public class Day12Test {
 
     @Test
     public void part1() throws Exception {
-        Assert.assertThat(Day12.part1(INPUT), CoreMatchers.is(6));
+        assertThat(Day12.part1(INPUT), is(6));
     }
 
     @Test
     public void part2() throws Exception {
+        assertThat(Day12.part2(INPUT), is(2));
     }
-
 }
