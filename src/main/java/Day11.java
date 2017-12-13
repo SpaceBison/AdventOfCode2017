@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Day11 {
     public static void main(String... args) {
         String input = Common.getInputForDay(11);
