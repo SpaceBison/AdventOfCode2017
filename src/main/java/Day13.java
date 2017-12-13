@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Day13 {
@@ -19,13 +21,14 @@ public class Day13 {
     }
 
     static int part2(String input) {
+        List<int[]> layers = Arrays.stream(input.split("\n"))
+                .map(l -> Arrays.stream(l.split(": "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray())
+                .collect(Collectors.toList());
+
         return IntStream.iterate(0, i -> i + 1)
-                .peek(System.out::println)
-                .filter(i -> Arrays.stream(input.split("\n"))
-                        .map(l -> Arrays.stream(l.split(": "))
-                                .mapToInt(Integer::parseInt)
-                                .toArray())
-                        .allMatch(l -> (i + l[0]) % (2 * l[1] - 2) != 0))
+                .filter(i -> layers.stream().allMatch(l -> (i + l[0]) % (2 * l[1] - 2) != 0))
                 .findFirst()
                 .getAsInt();
     }
