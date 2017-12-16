@@ -39,7 +39,7 @@ public class Day14 {
                 squares.set(i, ++ones);
             }
         }
-        
+
         Map<Integer, Integer> groups = new HashMap<>(ones + 1);
         for (int i = 0; i <= ones; ++i) {
             groups.put(i, i);
