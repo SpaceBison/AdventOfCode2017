@@ -13,47 +13,40 @@ public class Day16 {
     }
 
     static String part1(String input, int count) {
-        List<Character> programs = IntStream.range(0, count).mapToObj(i -> (char) ('a' + i)).collect(Collectors.toList());
+        List<Character> programs = getPrograms(count);
         doDance(input, programs);
-        return programs.stream().map(Object::toString).collect(Collectors.joining());
+        return getProgramsAsString(programs);
     }
 
     static String part2(String input, int count) {
-        List<Character> programs = IntStream.range(0, count).mapToObj(i -> (char) ('a' + i)).collect(Collectors.toList());
-        List<Character> tmpPrograms = new ArrayList<>(programs);
-        List<Character> afterDance = new ArrayList<>(programs);
-        doDance(input, afterDance);
+        List<Character> programs = getPrograms(count);
+        List<Character> state = programs;
+        List<List<Character>> states = new ArrayList<>();
+        states.add(state);
 
-        List<Integer> permutation = afterDance.stream()
-                .map(programs::indexOf)
-                .collect(Collectors.toList());
-
-        List<Integer> order = IntStream.range(0, 16).boxed().collect(Collectors.toList());
-        List<Integer> perm = new ArrayList<>(order);
-
-        List<List<Integer>> permutations = new LinkedList<>();
         do {
-            perm = applyPermutation(perm, permutation);
-            permutations.add(perm);
-            System.out.println(perm);
-        } while (!order.equals(perm));
+            state = singleDance(input, state);
+            states.add(state);
+        } while (!state.equals(programs));
 
-        permutations.add(0, permutations.remove(permutations.size() - 1));
+        states.remove(states.size() - 1);
 
-        List<Integer> finalPermutation = permutations.get(1_000_000_000 % permutations.size());
-
-        System.out.println(programs);
-        programs = applyPermutation(programs, finalPermutation);
-        System.out.println(programs);
-        return programs.stream().map(Object::toString).collect(Collectors.joining());
+        List<Character> finalState = states.get(1000000000 % states.size());
+        return getProgramsAsString(finalState);
     }
 
-    private static <E> List<E> applyPermutation(List<E> list, List<Integer> permutation) {
-        List<E> tmp = new ArrayList<>(16);
-        for (int j = 0; j < 16; ++j) {
-            tmp.add(j, list.get(permutation.get(j)));
-        }
-        return tmp;
+    static String getProgramsAsString(List<Character> afterDances) {
+        return afterDances.stream().map(Object::toString).collect(Collectors.joining());
+    }
+
+    static List<Character> singleDance(String input, List<Character> programs) {
+        List<Character> afterDance = new ArrayList<>(programs);
+        doDance(input, afterDance);
+        return afterDance;
+    }
+
+    static List<Character> getPrograms(int count) {
+        return IntStream.range(0, count).mapToObj(i -> (char) ('a' + i)).collect(Collectors.toList());
     }
 
     static <E> void swap(List<E> list, E a, E b) {
@@ -79,7 +72,7 @@ public class Day16 {
         }
     }
 
-    private static void doDance(String input, List<Character> programs) {
+    static void doDance(String input, List<Character> programs) {
         Scanner scanner = new Scanner(input).useDelimiter("");
         do {
             String next = scanner.next();
