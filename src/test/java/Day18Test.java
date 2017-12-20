@@ -17,7 +17,7 @@ public class Day18Test {
 
     @Test
     public void part1() throws Exception {
-        assertThat(Day18.part1(INPUT), is(4));
+        assertThat(Day18.part1(INPUT), is(4L));
     }
 
     @Test

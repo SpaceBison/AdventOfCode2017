@@ -11,21 +11,20 @@ public class Day18 {
         System.out.println(part2(input));
     }
 
-    static int part1(String input) {
+    static long part1(String input) {
         List<String[]> commands = Arrays.stream(input.split("\n"))
                 .map(line -> line.split(" "))
                 .collect(Collectors.toList());
 
-        Map<String, Integer> registers = new HashMap<>();
-        int lastPlayed = -1;
+        Map<String, Long> registers = new HashMap<>();
+        long snd = 0;
 
-        for (int i = 0; i < commands.size(); ++i) {
+        for (int i = 0; i < commands.size() && i >= 0; ++i) {
             String[] cmd = commands.get(i);
-            System.out.println(registers);
-            System.out.println(Arrays.toString(cmd));
+            System.out.format("%2d\t%-20s\t%s\tsnd: %8d\n", i, Arrays.toString(cmd), registers, snd);
             switch (cmd[0]) {
                 case "snd":
-                    lastPlayed = getValue(cmd[1], registers);
+                    snd = getValue(cmd[1], registers);
                     break;
 
                 case "set":
@@ -41,24 +40,24 @@ public class Day18 {
                     break;
 
                 case "mod":
-                    int divident = getValue(cmd[1], registers);
-                    int mod = divident % getValue(cmd[2], registers);
+                    long dividend = registers.getOrDefault(cmd[1], 0L);
+                    long mod = dividend % getValue(cmd[2], registers);
                     if (mod < 0) {
-                        mod += divident;
+                        mod += dividend;
                     }
                     registers.put(cmd[1], mod);
                     break;
 
                 case "rcv": {
-                    int value = getValue(cmd[1], registers);
+                    long value = getValue(cmd[1], registers);
                     if (value != 0) {
-                        return lastPlayed;
+                        return snd;
                     }
                     break;
                 }
 
                 case "jgz": {
-                    int value = registers.getOrDefault(cmd[1], 0);
+                    long value = registers.getOrDefault(cmd[1], 0L);
                     if (value > 0) {
                         i += getValue(cmd[2], registers) - 1;
                     }
@@ -66,14 +65,14 @@ public class Day18 {
             }
         }
 
-        return lastPlayed;
+        return snd;
     }
 
-    private static int getValue(String expr, Map<String, Integer> registers) {
+    private static long getValue(String expr, Map<String, Long> registers) {
         try {
-            return Integer.parseInt(expr);
+            return Long.parseLong(expr);
         } catch (NumberFormatException e) {
-            return registers.getOrDefault(expr, 0);
+            return registers.getOrDefault(expr, 0L);
         }
     }
 
@@ -82,6 +81,6 @@ public class Day18 {
     }
 
     static class Duet {
-
+        
     }
 }
