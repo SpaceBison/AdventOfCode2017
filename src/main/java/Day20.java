@@ -116,10 +116,6 @@ public class Day20 {
     private static class Vector {
         private final int x, y, z;
 
-        private Vector() {
-            this(0, 0, 0);
-        }
-
         private Vector(int x, int y, int z) {
             this.x = x;
             this.y = y;
@@ -128,18 +124,6 @@ public class Day20 {
 
         private int distanceFromBeginning() {
             return Math.abs(x) + Math.abs(y) + Math.abs(z);
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getZ() {
-            return z;
         }
 
         private Vector add(Vector other) {
