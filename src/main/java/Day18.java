@@ -8,31 +8,24 @@ public class Day18 {
         System.out.println(part2(input));
     }
 
-    static Long part1(String input) {
+    static long part1(String input) {
         Duet duet = new Duet(0, getCommands(input));
 
+        long snd = 0;
         do {
             Long send = duet.send();
             if (send != null) {
-                return send;
+                snd = send;
             }
         } while (duet.step());
 
-        return null;
+        return snd;
     }
 
     private static List<String[]> getCommands(String input) {
         return Arrays.stream(input.split("\n"))
                 .map(line -> line.split(" "))
                 .collect(Collectors.toList());
-    }
-
-    private static long getValue(String expr, Map<String, Long> registers) {
-        try {
-            return Long.parseLong(expr);
-        } catch (NumberFormatException e) {
-            return registers.getOrDefault(expr, 0L);
-        }
     }
 
     static int part2(String input) {
@@ -43,6 +36,8 @@ public class Day18 {
 
         int p1SendCount = 0;
 
+        boolean step0;
+        boolean step1;
         do {
             Long p0send = p0.send();
             if (p0send != null) {
@@ -54,7 +49,10 @@ public class Day18 {
                 p0.receive(p1Send);
                 p1SendCount++;
             }
-        } while (p0.step() && p1.step());
+
+            step0 = p0.step();
+            step1 = p1.step();
+        } while (step0 || step1);
 
         return p1SendCount;
     }
@@ -73,6 +71,14 @@ public class Day18 {
             registers.put("p", this.id);
         }
 
+        private long getValue(String expr) {
+            try {
+                return Long.parseLong(expr);
+            } catch (NumberFormatException e) {
+                return registers.getOrDefault(expr, 0L);
+            }
+        }
+
         public void receive(long value) {
             inputQueue.add(value);
         }
@@ -83,35 +89,34 @@ public class Day18 {
             }
 
             String[] cmd = commands.get(command);
-            System.out.format("[%d]\t%2d\t%-20s\t%s\tqueue: %s\n", id, command, Arrays.toString(cmd), registers, inputQueue);
             return eval(cmd);
         }
 
         private boolean eval(String[] cmd) {
             switch (cmd[0]) {
                 case "snd":
-                    snd = getValue(cmd[1], registers);
+                    snd = getValue(cmd[1]);
                     command++;
                     return true;
 
                 case "set":
-                    registers.put(cmd[1], getValue(cmd[2], registers));
+                    registers.put(cmd[1], getValue(cmd[2]));
                     command++;
                     return true;
 
                 case "add":
-                    registers.put(cmd[1], getValue(cmd[1], registers) + getValue(cmd[2], registers));
+                    registers.put(cmd[1], getValue(cmd[1]) + getValue(cmd[2]));
                     command++;
                     return true;
 
                 case "mul":
-                    registers.put(cmd[1], getValue(cmd[1], registers) * getValue(cmd[2], registers));
+                    registers.put(cmd[1], getValue(cmd[1]) * getValue(cmd[2]));
                     command++;
                     return true;
 
                 case "mod":
-                    long dividend = registers.getOrDefault(cmd[1], 0L);
-                    long mod = dividend % getValue(cmd[2], registers);
+                    long dividend = registers.get(cmd[1]);
+                    long mod = dividend % getValue(cmd[2]);
                     if (mod < 0) {
                         mod += dividend;
                     }
@@ -131,8 +136,8 @@ public class Day18 {
                 }
 
                 case "jgz": {
-                    long value = registers.getOrDefault(cmd[1], 0L);
-                    command += value > 0 ? getValue(cmd[2], registers) : 1;
+                    long value = getValue(cmd[1]);
+                    command += value > 0 ? getValue(cmd[2]) : 1;
                     return true;
                 }
             }
