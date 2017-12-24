@@ -1,6 +1,8 @@
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +19,16 @@ public class Day21 {
     }
 
     static int part1(String input) {
+        Pattern pattern = iterate(input, 5);
+        return pattern.countBits();
+    }
+
+    static int part2(String input) {
+        Pattern pattern = iterate(input, 18);
+        return pattern.countBits();
+    }
+
+    static Pattern iterate(String input, int iterations) {
         Map<Pattern, Pattern> rules = Arrays.stream(input.split("\n"))
                 .map(Day21::parseRule)
                 .collect(Collectors.toMap(r -> r.get(0), r -> r.get(1)));
@@ -25,9 +37,11 @@ public class Day21 {
 
         Pattern pattern = Pattern.HACKER;
 
-        for (int i = 0; i < 5; ++i) {
-            System.out.println(pattern);
-            for (Pattern key : fullRules.keySet()) {
+        List<Pattern> patternKeys = new ArrayList<>(fullRules.keySet());
+        patternKeys.sort(Comparator.comparingInt(Pattern::getSize));
+
+        for (int i = 0; i < iterations; ++i) {
+            for (Pattern key : patternKeys) {
                 int size = key.getSize();
                 if (pattern.getSize() % size == 0) {
                     List<Pattern> divided = pattern.divide(size);
@@ -39,8 +53,7 @@ public class Day21 {
                 }
             }
         }
-
-        return pattern.countBits();
+        return pattern;
     }
 
     private static HashMap<Pattern, Pattern> getFullRules(Map<Pattern, Pattern> rules) {
@@ -52,10 +65,6 @@ public class Day21 {
             }
         }
         return fullMap;
-    }
-
-    static int part2(String input) {
-        return 0;
     }
 
     private static List<Pattern> parseRule(String rule) {

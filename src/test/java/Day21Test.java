@@ -11,7 +11,7 @@ public class Day21Test {
 
     @Test
     public void part1() throws Exception {
-        assertThat(Day21.part1(INPUT), is(12));
+        assertThat(Day21.iterate(INPUT, 2).countBits(), is(12));
     }
 
     @Test
