@@ -8,9 +8,7 @@ import java.util.stream.Collectors;
 
 public class Day23 {
     public static void main(String... args) {
-        //System.out.println(part1(Common.getInputForDay(23)));
-        //System.out.println(part2(Common.getInputForDay("23_opt")));
-        //System.out.println(part2(Common.getInputForDay(23)));
+        System.out.println(part1(Common.getInputForDay(23)));
         System.out.println(port());
     }
 
@@ -168,49 +166,35 @@ public class Day23 {
         }
     }
 
+    /* FAST ENOUGH :v */
     private static int port() {
         int a = 1;
         int b = 107900;
-        int c = 124900;
-        int d = 0;
-        int e = 0;
-        int f = 0;
-        int g = 0;
         int h = 0;
 
-        do {
-            f = 1;
-            d = 2;
+        while (true) {
+            int f = 1;
+            int d = 2;
 
             do {
-                e = 2;
+                if (b % d == 0) {
+                    f = 0;
+                    break;
+                }
 
-                do {
-                    g = d * e - b;
+                d++;
+            } while (d != b);
 
-                    if (g == 0) {
-                        f = 0;
-                    }
-
-                    e--;
-                    g = e - b;
-                } while (g != 0);
-
-                d--;
-                g = d - b;
-            } while (g != 0);
 
             if (f == 0) {
-                h--;
+                h++;
             }
 
-            g = b - c;
-
-            if (g == 0) {
+            if (b == 124900) {
                 return h;
             }
 
-            b -= 17;
-        } while (true);
+            b += 17;
+        }
     }
 }
