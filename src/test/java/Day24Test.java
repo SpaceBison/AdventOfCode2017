@@ -20,6 +20,7 @@ public class Day24Test {
 
     @Test
     public void part2() throws Exception {
+        assertThat(Day24.part2(INPUT), is(19));
     }
 
 }
