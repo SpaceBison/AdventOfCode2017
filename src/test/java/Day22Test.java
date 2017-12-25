@@ -16,6 +16,8 @@ public class Day22Test {
 
     @Test
     public void part2() throws Exception {
+        assertThat(Day22.iterate2(Day22.parseInput(INPUT), 100), is(26));
+        assertThat(Day22.iterate2(Day22.parseInput(INPUT), 10000000), is(2511944));
     }
 
 }

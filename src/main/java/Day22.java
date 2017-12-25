@@ -11,11 +11,6 @@ public class Day22 {
         System.out.println(part2(input));
     }
 
-    static int part1(String input) {
-        Set<Point> infected = parseInput(input);
-        return iterate(infected, 10000);
-    }
-
     static int iterate(Set<Point> infected, int iterations) {
         Point carrier = new Point();
 
@@ -30,6 +25,50 @@ public class Day22 {
                 infected.add(new Point(carrier));
                 direction = direction.turnLeft();
                 infectingBursts++;
+            }
+
+            switch (direction) {
+                case UP:
+                    carrier.y--;
+                    break;
+                case RIGHT:
+                    carrier.x++;
+                    break;
+                case DOWN:
+                    carrier.y++;
+                    break;
+                case LEFT:
+                    carrier.x--;
+                    break;
+            }
+        }
+        return infectingBursts;
+    }
+
+    static int iterate2(Set<Point> infected, int iterations) {
+        Point carrier = new Point();
+
+        int infectingBursts = 0;
+
+        Set<Point> weakened = new HashSet<>();
+        Set<Point> flagged = new HashSet<>();
+
+        Direction direction = Direction.UP;
+        for (int i = 0; i < iterations; ++i) {
+            if (infected.contains(carrier)) {
+                infected.remove(carrier);
+                flagged.add(new Point(carrier));
+                direction = direction.turnRight();
+            } else if (weakened.contains(carrier)) {
+                weakened.remove(carrier);
+                infected.add(new Point(carrier));
+                infectingBursts++;
+            } else if (flagged.contains(carrier)) {
+                flagged.remove(carrier);
+                direction = direction.turnRight().turnRight();
+            } else { // clean
+                weakened.add(new Point(carrier));
+                direction = direction.turnLeft();
             }
 
             switch (direction) {
@@ -67,25 +106,17 @@ public class Day22 {
         return infected;
     }
 
+    static int part1(String input) {
+        Set<Point> infected = parseInput(input);
+        return iterate(infected, 10000);
+    }
+
     static int part2(String input) {
-        return 0;
+        Set<Point> infected = parseInput(input);
+        return iterate2(infected, 10000000);
     }
 
-    private enum Direction {
-        UP, RIGHT, DOWN, LEFT;
-
-        public Direction turnRight() {
-            Direction[] values = values();
-            return values[(ordinal() + 1) % values.length];
-        }
-
-        public Direction turnLeft() {
-            Direction[] values = values();
-            return values[(ordinal() + values.length - 1) % values.length];
-        }
-    }
-
-    private static String toString(Collection<Point> infected, Point current) {
+    private static String toString(Collection<Point> infected, Collection<Point> weakened, Collection<Point> flagged, Point current) {
         Rectangle rectangle = new Rectangle();
         infected.forEach(rectangle::add);
         rectangle.add(current);
@@ -97,6 +128,10 @@ public class Day22 {
                 Point point = new Point(x, y);
                 if (infected.contains(point)) {
                     sb.append(point.equals(current) ? 'X' : '#');
+                } else if (weakened.contains(point)) {
+                    sb.append(point.equals(current) ? 'W' : 'w');
+                } else if (flagged.contains(point)) {
+                    sb.append(point.equals(current) ? 'F' : 'f');
                 } else {
                     sb.append(point.equals(current) ? 'x' : '.');
                 }
@@ -105,5 +140,19 @@ public class Day22 {
         }
 
         return sb.toString();
+    }
+
+    private enum Direction {
+        UP, RIGHT, DOWN, LEFT;
+
+        public Direction turnLeft() {
+            Direction[] values = values();
+            return values[(ordinal() + values.length - 1) % values.length];
+        }
+
+        public Direction turnRight() {
+            Direction[] values = values();
+            return values[(ordinal() + 1) % values.length];
+        }
     }
 }
