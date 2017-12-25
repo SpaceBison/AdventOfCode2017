@@ -50,6 +50,7 @@ public class Day24 {
 
     private static Stream<List<List<Integer>>> findBridges(List<List<Integer>> components, int starting) {
         return components.stream()
+                .parallel()
                 .filter(c -> c.contains(starting))
                 .flatMap(c -> {
                     ArrayList<List<Integer>> rest = new ArrayList<>(components);
